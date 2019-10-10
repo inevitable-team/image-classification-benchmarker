@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Image Classification Benchmarker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Image Classification Benchmarker</h1>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam vel labore quos sit minus corrupti voluptatibus, sequi, quia repudiandae iste odio nemo iure. Officiis doloribus est ratione, maiores vitae illo!</p>
+        <select name="datasets" id="datasets">
+            <option value="mnist" id="mnist">MNIST</option>
+        </select>
+        <p id="datasetText">This dataset is x.</p>
+        <p id="imageCountText">Use 45,000 image out of 45,000.</p>
+        <input type="range" name="imageCount" id="imageCount">
+    </header>
+    <main>
+        <div class="algorithm">
+            <h2>TensorFlow Transfer Learner</h2>
+            <p>Example text.</p>
+            <input type="button" value="Train" class="train">
+        </div>
+        <div class="algorithm">
+            <h2>BrainJS CNN</h2>
+            <p>Example text two.</p>
+            <input type="button" value="Train" class="train">
+        </div>
+        <div class="algorithm algorithmNew">
+            <select name="algorithms" id="algorithms">
+                <option value="tfjs" id="tfjs">TensorFlow Transfer Learner</option>
+                <option value="bjs" id="bjs">BrainJS CNN</option>
+            </select>
+            <div id="addAlgorithm">+</div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

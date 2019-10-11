@@ -9,12 +9,30 @@ window.addEventListener("load", () => {
     datasetsElement = document.getElementById("datasets");
     datasetsElement.addEventListener("change", () => imageChange(datasetsElement.selectedIndex));
     document.getElementById("addAlgorithm").addEventListener("click", addAlgorithmEventListener);
+    document.getElementById("trainAll").addEventListener("click", addTrainAllEventListener);
 });
 
 function addAlgorithmEventListener() {
     let selectedId = document.getElementById("algorithmsList").selectedIndex;
     modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false });
     setModelsHTML();
+}
+
+function addTrainAllEventListener() {
+    modelsInUse.forEach((data, i) => {
+        // Add Spinnys?
+        // TRAIN FROM ELEMENT POST REQ
+        postReq("/api/models/train", {
+            imageId: IMAGES[datasetsElement.selectedIndex].id,
+            imagesToUse: imagesToUse,
+            modelId: data.modelId,
+            knobs: {}
+        }, results => {
+            modelsInUse[i].trained = true;
+            modelsInUse[i].results = results;
+            setModelsHTML();
+        });
+    });
 }
 
 function getReq(url, okayHandler, errorHandler) {

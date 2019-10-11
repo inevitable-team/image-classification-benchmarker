@@ -71,12 +71,24 @@ function setModelsHTML() {
 
 function setupModelEventListeners(modelArr) {
     modelArr.forEach(el => {
+        let i = modelsInUse.findIndex(el2 => el2.id == el.id);
         document.getElementById(`a${el.id}delBtn`).addEventListener("click", () => {
-            modelsInUse.splice(modelsInUse.findIndex(el2 => el2.id == el.id), 1);
+            modelsInUse.splice(i, 1);
             setModelsHTML();
         });
         document.getElementById(`a${el.id}trainBtn`).addEventListener("click", () => {
+            // Add Spinny?
             // TRAIN FROM ELEMENT POST REQ
+            postReq("/api/models/train", {
+                imageId: IMAGES[datasetsElement.selectedIndex].id,
+                imagesToUse: imagesToUse,
+                modelId: el.modelId,
+                knobs: {}
+            }, results => {
+                modelsInUse[i].trained = true;
+                modelsInUse[i].results = results;
+                setModelsHTML();
+            });
         });
     });
 }

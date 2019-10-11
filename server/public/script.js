@@ -21,7 +21,7 @@ function getReq(url, okayHandler, errorHandler) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
     xhr.send();
-    xhr.onload = () => xhr.status == 200 ? okayHandler(xhr.response) : errorHandler(xhr);
+    xhr.onload = () => xhr.status == 200 ? okayHandler(JSON.parse(xhr.response)) : errorHandler(xhr);
     xhr.onerror = errorHandler;
 }
 
@@ -30,7 +30,7 @@ function postReq(url, json, callback) {
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(json));
-    xhr.onreadystatechange = () => (xhr.readyState == 4 && xhr.status == 200) ? callback(xhr.responseText) : null;
+    xhr.onreadystatechange = () => (xhr.readyState == 4 && xhr.status == 200) ? callback(JSON.parse(xhr.responseText)) : null;
 }
 
 function initImages() {
@@ -39,7 +39,7 @@ function initImages() {
 }
 
 function imageChange(index) {
-    document.getElementById("datasetText").innerHTML = `${IMAGES[index].desc} <br/><br/> Classes: ['${IMAGES[index].classes.join("', '")}']`;
+    document.getElementById("datasetText").innerHTML = `${IMAGES[index].desc ? IMAGES[index].desc + "<br/><br/> " : ""} Classes: ['${IMAGES[index].classes.join("', '")}']`;
     rangeElement.min = IMAGES[index].classes.length * 10;
     rangeElement.max = IMAGES[index].count;
     rangeElement.value = IMAGES[index].count;

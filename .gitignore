@@ -86,3 +86,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# ONLY FOR QUICK DEV COMMITS
+server/imageDatasets/datasets

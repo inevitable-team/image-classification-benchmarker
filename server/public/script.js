@@ -1,4 +1,4 @@
-let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [];
+let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0;
 
 window.addEventListener("load", () => {
     // getReq("https://jsonplaceholder.typicode.com/todos/1", console.log, (res) => console.log("Fu", res));
@@ -8,7 +8,14 @@ window.addEventListener("load", () => {
     rangeElement.addEventListener("input", imageCountScroll);
     datasetsElement = document.getElementById("datasets");
     datasetsElement.addEventListener("change", () => imageChange(datasetsElement.selectedIndex));
+    document.getElementById("addAlgorithm").addEventListener("click", addAlgorithmEventListener);
 });
+
+function addAlgorithmEventListener() {
+    let selectedId = document.getElementById("algorithmsList").selectedIndex;
+    modelsInUse.push({ id: modelsInUse[modelsInUse.length-1].id++, modelId: MODELS[selectedId].id, trained: false });
+    setModelsHTML();
+}
 
 function getReq(url, okayHandler, errorHandler) {
     const xhr = new XMLHttpRequest();
@@ -16,6 +23,14 @@ function getReq(url, okayHandler, errorHandler) {
     xhr.send();
     xhr.onload = () => xhr.status == 200 ? okayHandler(xhr.response) : errorHandler(xhr);
     xhr.onerror = errorHandler;
+}
+
+function postReq(url, json, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = () => (xhr.readyState == 4 && xhr.status == 200) ? callback(xhr.responseText) : null;
 }
 
 function initImages() {
@@ -33,6 +48,7 @@ function imageChange(index) {
 }
 
 function imageCountScroll() {
+    imagesToUse = rangeElement.value;
     document.getElementById("imageCountText").innerHTML = `Use ${rangeElement.value} images out of ${rangeElement.max}.`;
 }
 

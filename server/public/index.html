@@ -11,30 +11,22 @@
     <header>
         <h1>Image Classification Benchmarker</h1>
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam vel labore quos sit minus corrupti voluptatibus, sequi, quia repudiandae iste odio nemo iure. Officiis doloribus est ratione, maiores vitae illo!</p>
+        <h2>Image Datasets</h2>
         <select name="datasets" id="datasets">
-            <option value="mnist" id="mnist">MNIST</option>
+            <option> --------------------- </option>
         </select>
-        <p id="datasetText">This dataset is x.</p>
-        <p id="imageCountText">Use 45,000 image out of 45,000.</p>
+        <p id="datasetText"></p>
+        <p id="imageCountText"></p>
         <input type="range" name="imageCount" id="imageCount">
+        <input type="button" value="Train All" class="train" id="trainAll">
     </header>
     <main>
-        <div class="algorithm">
-            <h2>TensorFlow Transfer Learner</h2>
-            <p>Example text.</p>
-            <input type="button" value="Train" class="train">
-        </div>
-        <div class="algorithm">
-            <h2>BrainJS CNN</h2>
-            <p>Example text two.</p>
-            <input type="button" value="Train" class="train">
-        </div>
+        <div id="algorithms"></div>
         <div class="algorithm algorithmNew">
-            <select name="algorithms" id="algorithms">
-                <option value="tfjs" id="tfjs">TensorFlow Transfer Learner</option>
-                <option value="bjs" id="bjs">BrainJS CNN</option>
+            <select name="algorithms" id="algorithmsList">
+                <option> --------------------- </option>
             </select>
-            <div id="addAlgorithm">+</div>
+            <input type="button" value="+" id="addAlgorithm">
         </div>
     </main>
     <script src="script.js"></script>

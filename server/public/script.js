@@ -1,4 +1,4 @@
-let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0;
+let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0;
 
 window.addEventListener("load", () => {
     // getReq("https://jsonplaceholder.typicode.com/todos/1", console.log, (res) => console.log("Fu", res));
@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
 
 function addAlgorithmEventListener() {
     let selectedId = document.getElementById("algorithmsList").selectedIndex;
-    modelsInUse.push({ id: modelsInUse[modelsInUse.length-1].id++, modelId: MODELS[selectedId].id, trained: false });
+    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false });
     setModelsHTML();
 }
 
@@ -54,9 +54,9 @@ function imageCountScroll() {
 
 function initModels() {
     document.getElementById("algorithmsList").innerHTML = MODELS.map((m, i) => `<option id="m${i}">${m.name}</option>`);
-    modelsInUse = MODELS.map((m, i) => {
+    modelsInUse = MODELS.map(m => {
         return {
-            id: i,
+            id: idCount++,
             modelId: m.id,
             trained: false
         };
@@ -66,6 +66,19 @@ function initModels() {
 
 function setModelsHTML() {
     document.getElementById("algorithms").innerHTML = modelsInUse.map(m => m.trained ? trainedModelHTML(m) : trainModelHTML(m)).join("");
+    setupModelEventListeners(modelsInUse);
+}
+
+function setupModelEventListeners(modelArr) {
+    modelArr.forEach(el => {
+        document.getElementById(`a${el.id}delBtn`).addEventListener("click", () => {
+            modelsInUse.splice(modelsInUse.findIndex(el2 => el2.id == el.id), 1);
+            setModelsHTML();
+        });
+        document.getElementById(`a${el.id}trainBtn`).addEventListener("click", () => {
+            // TRAIN FROM ELEMENT POST REQ
+        });
+    });
 }
 
 function trainModelHTML(userModelObj) {

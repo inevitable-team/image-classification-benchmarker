@@ -17,5 +17,5 @@ function getImages(sourceFolder) {
 }
 
 module.exports = fs.readdirSync(sourceFolder).map(folderName => { 
-    return { name: folderName, data: getImages(`${sourceFolder}/${folderName}`) }; 
+    return { name: folderName, absUrl: `${sourceFolder}/${folderName}`, data: getImages(`${sourceFolder}/${folderName}`) }; 
 });

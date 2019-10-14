@@ -133,3 +133,57 @@ h3 {
 .deleteBtn:hover {
     background-color: #d9dce2;
 }
+
+.eval {
+    text-align: center;
+}
+
+.time {
+    width: 30%;
+    display: inline-block;
+    transform: translateX(-5px);
+}
+
+.retrain, .download {
+    display: inline-block;
+    margin: 10px 2px;
+}
+
+.retrain {
+    width: 190px;
+    background-color: #89609e !important;
+}
+
+.download {
+    width: 40px;
+    background-color: #838c91;
+}
+
+.loader {
+    border: 8px solid white;
+    border-radius: 50%;
+    border-top: 8px solid gray;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    margin: 8vh auto;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

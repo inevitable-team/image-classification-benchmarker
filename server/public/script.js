@@ -28,6 +28,7 @@ function addTrainAllEventListener() {
             modelId: data.modelId,
             knobs: {}
         }, results => {
+            console.log("Trained Results: ", results);
             modelsInUse[i].trained = true;
             modelsInUse[i].results = results;
             setModelsHTML();
@@ -85,6 +86,15 @@ function initModels() {
 function setModelsHTML() {
     document.getElementById("algorithms").innerHTML = modelsInUse.map(m => m.trained ? trainedModelHTML(m) : trainModelHTML(m)).join("");
     setupModelEventListeners(modelsInUse);
+    modelsInUse.forEach(m => {
+        if (m.trained) {
+            Matrix({
+                container : `#cm${m.id}`,
+                data      : m.results.confusionMatrix,
+                labels    : IMAGES[datasetsElement.selectedIndex].classes
+            });
+        }
+    });
 }
 
 function setupModelEventListeners(modelArr) {
@@ -95,7 +105,7 @@ function setupModelEventListeners(modelArr) {
             setModelsHTML();
         });
         document.getElementById(`a${el.id}trainBtn`).addEventListener("click", () => {
-            // Add Spinny?
+            document.getElementById(`eval${el.id}`).innerHTML = "<div class='loader'></div>";
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
                 imageId: IMAGES[datasetsElement.selectedIndex].id,
@@ -108,6 +118,7 @@ function setupModelEventListeners(modelArr) {
                 setModelsHTML();
             });
         });
+        if (el.trained) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
     });
 }
 
@@ -117,11 +128,37 @@ function trainModelHTML(userModelObj) {
                 <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
                 <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
                 <input type="button" value="Train" class="train" id="a${userModelObj.id}trainBtn">
+                <div class="eval" id="eval${userModelObj.id}"></div>
             </div>`;
 }
 
 function trainedModelHTML(userModelObj) {
-    return trainModelHTML(userModelObj);
+    return `<div class="algorithm" id="${userModelObj.id}">
+                <input type="button" class="deleteBtn" value="x" id="a${userModelObj.id}delBtn">
+                <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
+                <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
+                <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
+                <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
+                <div class="eval" id="eval${userModelObj.id}">
+                    <div class="time">
+                        <p><b>Setup Time</b></p>
+                        <p>${userModelObj.results.setUpTime}s</p>
+                    </div>
+                    <div class="time">
+                        <p><b>Training Time</b></p>
+                        <p>${userModelObj.results.trainTime}s</p>
+                    </div>
+                    <div class="time">
+                        <p><b>Eval' Time</b></p>
+                        <p>${userModelObj.results.evaluateTime}s</p>
+                    </div>
+                    <div id="cm${userModelObj.id}"></div>
+                    <div class="accuracy">
+                        <p><b>Accuracy</b></p>
+                        <p>${userModelObj.results.accuracy}%</p>
+                    </div>
+                </div>  
+            </div>`;
 }
 
 function setImages(response) {

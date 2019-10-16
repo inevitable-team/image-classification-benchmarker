@@ -4,9 +4,10 @@
  */
 function Matrix(options) {
 	
-	var margin = {top: 20, right: 20, bottom: 20, left: 20},
-	    width = 210,
-	    height = 210,
+	let longestWordLength = Math.max(...options.labels.map(l => l.length));
+	var margin = {top: 20, right: 20, bottom: (7 * longestWordLength) + 11, left: (8 * longestWordLength) + 10},
+	    width = 250 - (margin.left + margin.right),
+	    height = 250 - (margin.top + margin.bottom),
 	    data = options.data,
 	    container = options.container,
 	    labelsData = options.labels,
@@ -99,7 +100,7 @@ function Matrix(options) {
 	    .attr("y2", 5);
 
 	columnLabels.append("text")
-	    .attr("x", 6)
+	    .attr("x", -3)
 	    .attr("y", y.rangeBand() / 2)
 	    .attr("dy", ".32em")
 	    .attr("text-anchor", "end")

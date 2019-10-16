@@ -14,12 +14,13 @@ window.addEventListener("load", () => {
 
 function addAlgorithmEventListener() {
     let selectedId = document.getElementById("algorithmsList").selectedIndex;
-    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false, split: 0.75, epochs: 5 });
+    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false, training: false, split: 0.75, epochs: 5 });
     setModelsHTML();
 }
 
 function addTrainAllEventListener() {
     modelsInUse.forEach((data, i) => {
+        modelsInUse[i].training = true;
         // TRAIN FROM ELEMENT POST REQ
         postReq("/api/models/train", {
             imageId: IMAGES[datasetsElement.selectedIndex].id,
@@ -32,6 +33,7 @@ function addTrainAllEventListener() {
         }, results => {
             console.log("Trained Results: ", results);
             modelsInUse[i].trained = true;
+            modelsInUse[i].training = false;
             modelsInUse[i].results = results;
             setModelsHTML();
         });
@@ -84,6 +86,7 @@ function initModels() {
             id: idCount++,
             modelId: m.id,
             trained: false,
+            training: false,
             split: 0.75,
             epochs: 5
         };
@@ -92,7 +95,7 @@ function initModels() {
 }
 
 function setModelsHTML() {
-    document.getElementById("algorithms").innerHTML = modelsInUse.map(m => m.trained ? trainedModelHTML(m) : trainModelHTML(m)).join("");
+    document.getElementById("algorithms").innerHTML = modelsInUse.map(m => m.training ? trainingModelHTML(m) : m.trained ? trainedModelHTML(m) : trainModelHTML(m)).join("");
     setupModelEventListeners(modelsInUse);
     modelsInUse.forEach(m => {
         if (m.trained) {
@@ -133,6 +136,8 @@ function setupModelEventListeners(modelArr) {
         document.getElementById(`a${el.id}trainBtn`).addEventListener("click", () => {
             document.getElementById(`eval${el.id}`).innerHTML = "<div class='loader'></div>";
             document.getElementById(`a${el.id}trainBtn`).disabled = true;
+            document.getElementById(`a${el.id}trainBtn`).value = "N/A";
+            modelsInUse[i].training = true;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
                 imageId: IMAGES[datasetsElement.selectedIndex].id,
@@ -144,6 +149,7 @@ function setupModelEventListeners(modelArr) {
                 }
             }, results => {
                 modelsInUse[i].trained = true;
+                modelsInUse[i].training = false;
                 modelsInUse[i].results = results;
                 setModelsHTML();
             });
@@ -173,6 +179,14 @@ function trainModelHTML(userModelObj) {
                 ${modelHTML(userModelObj)}
                 <input type="button" value="Train" class="train" id="a${userModelObj.id}trainBtn">
                 <div class="eval" id="eval${userModelObj.id}"></div>
+            </div>`;
+}
+
+function trainingModelHTML(userModelObj) {
+    return `<div class="algorithm" id="${userModelObj.id}">
+                ${modelHTML(userModelObj)}
+                <input type="button" value="N/A" class="train" id="a${userModelObj.id}trainBtn" disabled>
+                <div class="eval" id="eval${userModelObj.id}"><div class='loader'></div></div>
             </div>`;
 }
 

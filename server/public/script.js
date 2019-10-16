@@ -20,24 +20,26 @@ function addAlgorithmEventListener() {
 
 function addTrainAllEventListener() {
     modelsInUse.forEach((data, i) => {
-        modelsInUse[i].training = true;
-        // TRAIN FROM ELEMENT POST REQ
-        postReq("/api/models/train", {
-            imageId: IMAGES[datasetsElement.selectedIndex].id,
-            imagesToUse: imagesToUse,
-            modelId: data.modelId,
-            knobs: {
-                split: data.split,
-                epochs: data.epochs
-            }
-        }, results => {
-            console.log("Trained Results: ", results);
-            modelsInUse[i].trained = true;
-            modelsInUse[i].training = false;
-            modelsInUse[i].results = results;
-            setModelsHTML();
-        });
-    });
+        if (!modelsInUse[i].training) {
+            modelsInUse[i].training = true;
+            // TRAIN FROM ELEMENT POST REQ
+            postReq("/api/models/train", {
+                imageId: IMAGES[datasetsElement.selectedIndex].id,
+                imagesToUse: imagesToUse,
+                modelId: data.modelId,
+                knobs: {
+                    split: data.split,
+                    epochs: data.epochs
+                }
+            }, results => {
+                console.log("Trained Results: ", results);
+                modelsInUse[i].trained = true;
+                modelsInUse[i].training = false;
+                modelsInUse[i].results = results;
+                setModelsHTML();
+            });
+        }
+    }); setModelsHTML();
 }
 
 function getReq(url, okayHandler, errorHandler) {

@@ -1,4 +1,5 @@
 const transferLearner = require("@inevitable/tfjs-transfer-learner");
+const tfn = require("@tensorflow/tfjs-node");
 
 class transferLearnerWrapper {
     constructor() {
@@ -9,6 +10,7 @@ class transferLearnerWrapper {
     create(imagePercentage, imageAbsPath, params) {
         params.imagesUrl = imageAbsPath;
         params.imageLimiter = imagePercentage;
+        params.oldModelUrl = tfn.io.fileSystem("./server/models/assets/mobilenet_v1_0.25_224/model.json");
         return new tl(params);
     }
 }

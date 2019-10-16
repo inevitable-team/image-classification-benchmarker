@@ -23,6 +23,9 @@ function Matrix(options) {
 
 	numrows = data.length;
 	numcols = data[0].length;
+	let flatArr = [].concat.apply([], data);
+	let min = Math.min(...flatArr);
+	let max = Math.max(...flatArr);
 
 	var svg = d3.select(container).append("svg")
 	    .attr("width", width + margin.left + margin.right)
@@ -46,7 +49,7 @@ function Matrix(options) {
 	    .rangeBands([0, height]);
 
 	var colorMap = d3.scale.linear()
-	    .domain([0, 1])
+	    .domain([min, max])
 	    .range(["white", "black"]);    
 
 	var row = svg.selectAll(".row")
@@ -70,8 +73,8 @@ function Matrix(options) {
 	    .attr("dy", ".32em")
 	    .attr("x", x.rangeBand() / 2)
 	    .attr("y", y.rangeBand() / 2)
-	    .attr("text-anchor", "middle")
-	    .style("fill", function(d, i) { return d >= 0.5 ? 'white' : 'black'; })
+		.attr("text-anchor", "middle")
+		.style("fill", function(d, i) { return (min == 0 && max ==0) ? 'black' : d >= ((max - min) / 2) + min ? 'white' : 'black'; })
 	    .text(function(d, i) { return d; });
 
 	row.selectAll(".cell")

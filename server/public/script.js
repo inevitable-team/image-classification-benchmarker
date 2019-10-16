@@ -155,7 +155,7 @@ function setupModelEventListeners(modelArr) {
             });
         });
         // Download
-        if (el.trained) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
+        if (document.getElementById(`a${el.id}downloadBtn`)) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
     });
 }
 

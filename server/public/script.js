@@ -71,6 +71,10 @@ function imageChange(index) {
 function imageCountScroll() {
     imagesToUse = rangeElement.value;
     document.getElementById("imageCountText").innerHTML = `Use ${rangeElement.value} images out of ${rangeElement.max}.`;
+    modelsInUse.forEach(el => {
+        document.getElementById(`a${el.id}splitTraining`).innerHTML = Math.round(imagesToUse * el.split);
+        document.getElementById(`a${el.id}splitTesting`).innerHTML = Math.round(imagesToUse * (1 - el.split));
+    }); setModelsHTML();
 }
 
 function initModels() {
@@ -114,6 +118,8 @@ function setupModelEventListeners(modelArr) {
         document.getElementById(`a${el.id}split`).addEventListener("input", () => {
             let value = parseFloat(document.getElementById(`a${el.id}split`).value);
             document.getElementById(`a${el.id}splitTxt`).innerHTML = Math.round(value * 100) + "%";
+            document.getElementById(`a${el.id}splitTraining`).innerHTML = Math.round(imagesToUse * value);
+            document.getElementById(`a${el.id}splitTesting`).innerHTML = Math.round(imagesToUse * (1 - value));
             modelsInUse[i].split = value;
         });
         // Epochs
@@ -152,6 +158,10 @@ function modelHTML(userModelObj) {
             <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
             <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
             <h4>Customize</h4>
+            <div class="imageSplit">
+                <div><p><b>Training Images</b></p><p id="a${userModelObj.id}splitTraining">${Math.round(imagesToUse * userModelObj.split)}</p></div>
+                <div><p><b>Testing Images</b></p><p id="a${userModelObj.id}splitTesting">${Math.round(imagesToUse * (1 - userModelObj.split))}</p></div>
+            </div>
             <div class="knobs">
                 <div class="split"><p>Training Split: </p><input id="a${userModelObj.id}split" class="splitInput" type="range" min="0.1" value="${userModelObj.split}" max="0.9" step="0.01" /><p id="a${userModelObj.id}splitTxt">75%</p></div>
                 <div class="epochs"><p>Epochs: </p><input id="a${userModelObj.id}epochs" class="epochInput" type="range" min="1" value="${userModelObj.epochs}" max="100" /><p id="a${userModelObj.id}epochsTxt">5</p></div>

@@ -187,6 +187,20 @@ input[type="button"]:disabled {
 h4 {
     margin: 10px 0px;
 }
+.imageSplit {
+    text-align: center;
+}
+
+.imageSplit > * {
+    display: inline-block;
+    text-align: center;
+    width: calc(50% - 20px);
+    margin: 2px 5px;
+}
+
+.imageSplit p {
+    margin: 5px 10px;
+}
 
 .loader {
     border: 8px solid white;

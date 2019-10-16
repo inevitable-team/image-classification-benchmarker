@@ -14,19 +14,21 @@ window.addEventListener("load", () => {
 
 function addAlgorithmEventListener() {
     let selectedId = document.getElementById("algorithmsList").selectedIndex;
-    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false });
+    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false, split: 0.75, epochs: 5 });
     setModelsHTML();
 }
 
 function addTrainAllEventListener() {
     modelsInUse.forEach((data, i) => {
-        // Add Spinnys?
         // TRAIN FROM ELEMENT POST REQ
         postReq("/api/models/train", {
             imageId: IMAGES[datasetsElement.selectedIndex].id,
             imagesToUse: imagesToUse,
             modelId: data.modelId,
-            knobs: {}
+            knobs: {
+                split: data.split,
+                epochs: data.epochs
+            }
         }, results => {
             console.log("Trained Results: ", results);
             modelsInUse[i].trained = true;
@@ -77,7 +79,9 @@ function initModels() {
         return {
             id: idCount++,
             modelId: m.id,
-            trained: false
+            trained: false,
+            split: 0.75,
+            epochs: 5
         };
     });
     setModelsHTML();
@@ -100,33 +104,63 @@ function setModelsHTML() {
 function setupModelEventListeners(modelArr) {
     modelArr.forEach(el => {
         let i = modelsInUse.findIndex(el2 => el2.id == el.id);
+        // Delete
         document.getElementById(`a${el.id}delBtn`).addEventListener("click", () => {
             modelsInUse.splice(i, 1);
             setModelsHTML();
         });
+        // Training Split
+        document.getElementById(`a${el.id}splitTxt`).innerHTML = Math.round(parseFloat(document.getElementById(`a${el.id}split`).value) * 100) + "%"
+        document.getElementById(`a${el.id}split`).addEventListener("input", () => {
+            let value = parseFloat(document.getElementById(`a${el.id}split`).value);
+            document.getElementById(`a${el.id}splitTxt`).innerHTML = Math.round(value * 100) + "%";
+            modelsInUse[i].split = value;
+        });
+        // Epochs
+        document.getElementById(`a${el.id}epochsTxt`).innerHTML = document.getElementById(`a${el.id}epochs`).value;
+        document.getElementById(`a${el.id}epochs`).addEventListener("input", () => {
+            let value = parseInt(document.getElementById(`a${el.id}epochs`).value);
+            document.getElementById(`a${el.id}epochsTxt`).innerHTML = value;
+            modelsInUse[i].epochs = value;
+        });
+        // Train
         document.getElementById(`a${el.id}trainBtn`).addEventListener("click", () => {
             document.getElementById(`eval${el.id}`).innerHTML = "<div class='loader'></div>";
+            document.getElementById(`a${el.id}trainBtn`).disabled = true;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
                 imageId: IMAGES[datasetsElement.selectedIndex].id,
                 imagesToUse: imagesToUse,
                 modelId: el.modelId,
-                knobs: {}
+                knobs: {
+                    split: el.split,
+                    epochs: el.epochs
+                }
             }, results => {
                 modelsInUse[i].trained = true;
                 modelsInUse[i].results = results;
                 setModelsHTML();
             });
         });
+        // Download
         if (el.trained) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
     });
 }
 
+function modelHTML(userModelObj) {
+    return `<input type="button" class="deleteBtn" value="x" id="a${userModelObj.id}delBtn">
+            <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
+            <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
+            <h4>Customize</h4>
+            <div class="knobs">
+                <div class="split"><p>Training Split: </p><input id="a${userModelObj.id}split" class="splitInput" type="range" min="0.1" value="${userModelObj.split}" max="0.9" step="0.01" /><p id="a${userModelObj.id}splitTxt">75%</p></div>
+                <div class="epochs"><p>Epochs: </p><input id="a${userModelObj.id}epochs" class="epochInput" type="range" min="1" value="${userModelObj.epochs}" max="100" /><p id="a${userModelObj.id}epochsTxt">5</p></div>
+            </div>`
+}
+
 function trainModelHTML(userModelObj) {
     return `<div class="algorithm" id="${userModelObj.id}">
-                <input type="button" class="deleteBtn" value="x" id="a${userModelObj.id}delBtn">
-                <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
-                <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
+                ${modelHTML(userModelObj)}
                 <input type="button" value="Train" class="train" id="a${userModelObj.id}trainBtn">
                 <div class="eval" id="eval${userModelObj.id}"></div>
             </div>`;
@@ -134,9 +168,7 @@ function trainModelHTML(userModelObj) {
 
 function trainedModelHTML(userModelObj) {
     return `<div class="algorithm" id="${userModelObj.id}">
-                <input type="button" class="deleteBtn" value="x" id="a${userModelObj.id}delBtn">
-                <h3>${MODELS.find(e => e.id == userModelObj.modelId).name}</h3>
-                <p>${MODELS.find(e => e.id == userModelObj.modelId).desc}</p>
+                ${modelHTML(userModelObj)}
                 <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
                 <div class="eval" id="eval${userModelObj.id}">
@@ -152,6 +184,7 @@ function trainedModelHTML(userModelObj) {
                         <p><b>Eval' Time</b></p>
                         <p>${userModelObj.results.evaluateTime}s</p>
                     </div>
+                    <h4>Confusion Matrix</h4>
                     <div id="cm${userModelObj.id}"></div>
                     <div class="accuracy">
                         <p><b>Accuracy</b></p>

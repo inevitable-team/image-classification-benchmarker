@@ -159,6 +159,35 @@ h3 {
     background-color: #838c91;
 }
 
+input[type="button"]:disabled {
+    background-color: #838c91 !important;
+}
+
+.knobs > * > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.knobs input[type="range"] {
+    margin: 0px 10px;
+}
+
+.splitInput {
+    width: 100px;
+}
+
+.epochInput {
+    width: 138px;
+}
+
+.knobs p {
+    margin: 5px 1px;
+}
+
+h4 {
+    margin: 10px 0px;
+}
+
 .loader {
     border: 8px solid white;
     border-radius: 50%;

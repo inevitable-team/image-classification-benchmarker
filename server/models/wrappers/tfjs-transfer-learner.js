@@ -20,12 +20,15 @@ class tl {
         this.transferLearner = new transferLearner(params);
     }
 
+    async predictOne(fileBuffer) {
+        return await this.transferLearner.predictOneFromFileBuffer(fileBuffer);
+    }
+
     async run() {
         await this.transferLearner.setup();
         await this.transferLearner.train();
         await this.transferLearner.evaluate();
         let results = this.transferLearner.benchmarkResults();
-        this.transferLearner = null;
         return {
             setUpTime: results.setUpTime,
             trainTime: results.trainTime,

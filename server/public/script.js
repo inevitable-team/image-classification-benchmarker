@@ -1,4 +1,4 @@
-let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0;
+let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0, rid = Math.random().toString(36).substr(2, 16);
 
 window.addEventListener("load", () => {
     // getReq("https://jsonplaceholder.typicode.com/todos/1", console.log, (res) => console.log("Fu", res));
@@ -24,6 +24,8 @@ function addTrainAllEventListener() {
             modelsInUse[i].training = true;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
+                uid: rid,
+                mid: data.id,
                 imageId: IMAGES[datasetsElement.selectedIndex].id,
                 imagesToUse: imagesToUse,
                 modelId: data.modelId,
@@ -142,6 +144,8 @@ function setupModelEventListeners(modelArr) {
             modelsInUse[i].training = true;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
+                uid: rid,
+                mid: el.id,
                 imageId: IMAGES[datasetsElement.selectedIndex].id,
                 imagesToUse: imagesToUse,
                 modelId: el.modelId,
@@ -158,6 +162,24 @@ function setupModelEventListeners(modelArr) {
         });
         // Download
         if (document.getElementById(`a${el.id}downloadBtn`)) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
+        // Predict
+        if (el.trained) {
+            document.getElementById(`a${el.id}fileUpload`).addEventListener('change', () => {
+                let fr = new FileReader();
+                let file = document.getElementById(`a${el.id}fileUpload`).files[0];
+                fr.readAsArrayBuffer(file);
+                fr.onload = (e) => {
+                    let imgBuffer = new Uint8Array(e.target.result);
+                    postReq("/api/models/predictOne", {
+                        uid: rid,
+                        mid: el.id,
+                        Uint8ArrayBuffer: imgBuffer
+                    }, result => {
+                        console.log("Prediction: ", result);
+                    });
+                }
+            });
+        }
     });
 }
 
@@ -197,6 +219,7 @@ function trainedModelHTML(userModelObj) {
                 ${modelHTML(userModelObj)}
                 <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
+                <div id="predictDiv"><p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload"></div>
                 <div class="eval" id="eval${userModelObj.id}">
                     <div class="time">
                         <p><b>Setup Time</b></p>

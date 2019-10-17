@@ -17,6 +17,10 @@ class e {
         this.params = params;
     }
 
+    async predictOne(fileBuffer) {
+        return "N/A";
+    }
+
     async run() {
         return {
             setUpTime: 0,

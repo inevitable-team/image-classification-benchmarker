@@ -10,11 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@inevitable/tfjs-transfer-learner": "^1.2.4",
+    "@inevitable/tfjs-transfer-learner": "^1.2.5",
     "@tensorflow/tfjs-node": "1.2.10",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jpeg-js": "^0.3.6",
     "sharp": "^0.23.1"
   }
 }

@@ -43,7 +43,7 @@ main {
 .algorithm {
     background-color: #ebecf0;
     padding: 5px 10px;
-    width: 250px;
+    width: 300px;
     display: inline-block;
     vertical-align: top;
     margin: 10px;
@@ -150,7 +150,7 @@ h3 {
 }
 
 .retrain {
-    width: 190px;
+    width: calc(100% - 55px);
     background-color: #89609e !important;
 }
 
@@ -173,11 +173,11 @@ input[type="button"]:disabled {
 }
 
 .splitInput {
-    width: 100px;
+    width: calc(100% - 153px);
 }
 
 .epochInput {
-    width: 138px;
+    width: calc(100% - 114px);
 }
 
 .knobs p {

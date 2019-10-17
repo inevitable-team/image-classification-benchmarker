@@ -6,8 +6,8 @@ function Matrix(options) {
 	
 	let longestWordLength = Math.max(...options.labels.map(l => l.length));
 	var margin = {top: 20, right: 20, bottom: (7 * longestWordLength) + 11, left: (8 * longestWordLength) + 10},
-	    width = 250 - (margin.left + margin.right),
-	    height = 250 - (margin.top + margin.bottom),
+	    width = 300 - (margin.left + margin.right),
+	    height = 300 - (margin.top + margin.bottom),
 	    data = options.data,
 	    container = options.container,
 	    labelsData = options.labels,
@@ -71,7 +71,8 @@ function Matrix(options) {
 	    .style("stroke-width", 0);
 
     cell.append("text")
-	    .attr("dy", ".32em")
+		.attr("dy", ".32em")
+		.style("font-size", "0.8em")
 	    .attr("x", x.rangeBand() / 2)
 	    .attr("y", y.rangeBand() / 2)
 		.attr("text-anchor", "middle")

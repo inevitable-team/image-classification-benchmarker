@@ -3,7 +3,7 @@ const fs = require("fs"), sharp = require("sharp");
 class tfjsMnistWrapper {
     constructor() {
         this.name = "TensorFlow.js Example: Training MNIST";
-        this.desc = "This is the re-implementation of TensorFlow official example implementation using a feed forwards neural network.";
+        this.desc = "This is the re-implementation of TensorFlow example implementation using a feed forwards neural network.";
     }
 
     create(imagePercentage, imageAbsPath, params) {

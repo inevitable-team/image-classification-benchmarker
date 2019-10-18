@@ -217,11 +217,12 @@ h4 {
 
 .predictionsContainer {
     width: 100%;
-    height: 130px;
+    height: 150px;
     background-color: white;
     border-radius: 15px;
     overflow-y: hidden;
     overflow-x: auto;
+    white-space: nowrap;
 }
 
 .prediction {
@@ -231,6 +232,7 @@ h4 {
     margin: 10px;
     border-radius: 15px;
     overflow: hidden;
+    display: inline-block;
 }
 
 .prediction img {

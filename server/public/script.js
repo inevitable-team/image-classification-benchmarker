@@ -224,7 +224,7 @@ function trainedModelHTML(userModelObj) {
                 <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
                 <div class="predictDiv">
-                    <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload">
+                    <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload" multiple>
                     <div id="a${userModelObj.id}predictions" class="predictionsContainer"></div>
                 </div>
                 <div class="eval" id="eval${userModelObj.id}">
@@ -253,7 +253,7 @@ function trainedModelHTML(userModelObj) {
 function predictionHTML(src, txt) {
     return `<div class="prediction">
                 <img src="${src}">
-                <p">${txt}</p>
+                <p>${txt}</p>
             </div>`
 }
 

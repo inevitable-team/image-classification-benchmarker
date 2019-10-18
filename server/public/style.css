@@ -173,11 +173,11 @@ input[type="button"]:disabled {
 }
 
 .splitInput {
-    width: calc(100% - 153px);
+    width: calc(100% - 160px);
 }
 
 .epochInput {
-    width: calc(100% - 114px);
+    width: calc(100% - 120px);
 }
 
 .knobs p {
@@ -187,6 +187,7 @@ input[type="button"]:disabled {
 h4 {
     margin: 10px 0px;
 }
+
 .imageSplit {
     text-align: center;
 }
@@ -202,8 +203,44 @@ h4 {
     margin: 5px 10px;
 }
 
-#predictDiv > * {
+.predictDiv > * {
     display: inline-block;
+}
+
+.predictDiv > p {
+    margin-right: 15px;
+}
+
+.predictDiv > input {
+    width: calc(100% - 70px);
+}
+
+.predictionsContainer {
+    width: 100%;
+    height: 130px;
+    background-color: white;
+    border-radius: 15px;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.prediction {
+    width: 100px;
+    height: 110px;
+    background-color: #ebecf0;
+    margin: 10px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.prediction img {
+    width: 100%;
+    height: calc(100% - 30px);
+}
+
+.prediction p {
+    text-align: center;
+    margin: 1px;
 }
 
 .loader {

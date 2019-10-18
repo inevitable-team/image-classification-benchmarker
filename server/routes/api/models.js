@@ -44,4 +44,20 @@ router.post('/predictOne', async (req, res) => {
   }
 });
 
+router.post('/removeModel', async (req, res) => {
+  try {
+    // If model has been previously trained, remove it
+    let modelIndex = trainedModels.findIndex(m => m.uid == req.body.uid && m.mid == req.body.mid);
+    if (modelIndex != -1) { 
+      trainedModels.splice(modelIndex, 1);
+      res.status(200).send("Done!");
+    } else {
+      res.status(400).send("Could not find Model!");
+    }
+  } catch (e) {
+    console.log("Training Error: ", e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;

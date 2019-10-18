@@ -165,19 +165,23 @@ function setupModelEventListeners(modelArr) {
         // Predict
         if (el.trained) {
             document.getElementById(`a${el.id}fileUpload`).addEventListener('change', () => {
-                let fr = new FileReader();
-                let file = document.getElementById(`a${el.id}fileUpload`).files[0];
-                fr.readAsArrayBuffer(file);
-                fr.onload = (e) => {
-                    let imgBuffer = new Uint8Array(e.target.result);
-                    postReq("/api/models/predictOne", {
-                        uid: rid,
-                        mid: el.id,
-                        Uint8ArrayBuffer: imgBuffer
-                    }, result => {
-                        console.log("Prediction: ", result);
-                    });
-                }
+                [...document.getElementById(`a${el.id}fileUpload`).files].forEach(file => {
+                    let fr = new FileReader();
+                    fr.readAsArrayBuffer(file);
+                    fr.onload = (e) => {
+                        let imgBuffer = new Uint8Array(e.target.result);
+                        postReq("/api/models/predictOne", {
+                            uid: rid,
+                            mid: el.id,
+                            Uint8ArrayBuffer: imgBuffer
+                        }, result => {
+                            console.log("Prediction: ", result);
+                            let reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = (eOnLoad) => document.getElementById(`a${el.id}predictions`).innerHTML += predictionHTML(eOnLoad.target.result, result.prediction);                            
+                        });
+                    }
+                })
             });
         }
     });
@@ -219,7 +223,10 @@ function trainedModelHTML(userModelObj) {
                 ${modelHTML(userModelObj)}
                 <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
-                <div id="predictDiv"><p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload"></div>
+                <div class="predictDiv">
+                    <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload">
+                    <div id="a${userModelObj.id}predictions" class="predictionsContainer"></div>
+                </div>
                 <div class="eval" id="eval${userModelObj.id}">
                     <div class="time">
                         <p><b>Setup Time</b></p>
@@ -241,6 +248,13 @@ function trainedModelHTML(userModelObj) {
                     </div>
                 </div>  
             </div>`;
+}
+
+function predictionHTML(src, txt) {
+    return `<div class="prediction">
+                <img src="${src}">
+                <p">${txt}</p>
+            </div>`
 }
 
 function setImages(response) {

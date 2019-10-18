@@ -207,8 +207,8 @@ function modelHTML(userModelObj) {
                 <div><p><b>Testing Images</b></p><p id="a${userModelObj.id}splitTesting">${Math.round(imagesToUse * (1 - userModelObj.split))}</p></div>
             </div>
             <div class="knobs">
-                <div class="split"><p>Training Split: </p><input id="a${userModelObj.id}split" class="splitInput" type="range" min="0.1" value="${userModelObj.split}" max="0.9" step="0.01" /><p id="a${userModelObj.id}splitTxt">75%</p></div>
-                <div class="epochs"><p>Epochs: </p><input id="a${userModelObj.id}epochs" class="epochInput" type="range" min="1" value="${userModelObj.epochs}" max="100" /><p id="a${userModelObj.id}epochsTxt">5</p></div>
+                <div class="split"><label for="a${userModelObj.id}split"><p>Training Split: </p></label><input id="a${userModelObj.id}split" class="splitInput" type="range" min="0.1" value="${userModelObj.split}" max="0.9" step="0.01" /><p id="a${userModelObj.id}splitTxt">75%</p></div>
+                <div class="epochs"><label for="a${userModelObj.id}epochs"><p>Epochs: </p></label><input id="a${userModelObj.id}epochs" class="epochInput" type="range" min="1" value="${userModelObj.epochs}" max="100" /><p id="a${userModelObj.id}epochsTxt">5</p></div>
             </div>`
 }
 
@@ -234,7 +234,7 @@ function trainedModelHTML(userModelObj) {
                 <input type="button" value="Re-train" class="train retrain" id="a${userModelObj.id}trainBtn">
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
                 <div class="predictDiv">
-                    <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload" multiple>
+                    <label for="a${userModelObj.id}fileUpload"><p>Predict: </p></label><input type="file" name="" id="a${userModelObj.id}fileUpload" multiple>
                     <div id="a${userModelObj.id}predictions" class="predictionsContainer">
                         ${ userModelObj.predictions.map(p => predictionHTML(p.imgSrc, p.prediction)).reverse().join("") }
                     </div>

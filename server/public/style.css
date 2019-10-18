@@ -40,6 +40,12 @@ main {
     white-space: normal;
 } */
 
+.algorithmNew h3 {
+    text-align: left;
+    height: auto;
+    margin: 20px 0px;
+}
+
 .algorithm {
     background-color: #ebecf0;
     padding: 5px 10px;
@@ -52,7 +58,7 @@ main {
 
 .train {
     color: white;
-    background-color: #5aac44;
+    background-color: #2e7d32;
     width: calc(100% - 20px);
     padding: 10px;
     font-size: 0.9em;
@@ -100,7 +106,7 @@ main {
     border: none;
     width: 30px;
     outline : none;
-    background-color: #65be4c;
+    background-color: #2e7d32;
     color: white;
 }
 

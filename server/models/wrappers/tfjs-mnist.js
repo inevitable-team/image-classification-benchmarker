@@ -1,4 +1,4 @@
-const fs = require("fs"), sharp = require("sharp");
+const fs = require("fs"), sharp = require("sharp") //, tf_gpu = require("@tensorflow/tfjs-node-gpu");
 
 class tfjsMnistWrapper {
     constructor() {
@@ -9,6 +9,7 @@ class tfjsMnistWrapper {
     create(imagePercentage, imageAbsPath, params) {
         params.imagesUrl = imageAbsPath;
         params.imageLimiter = imagePercentage;
+        // params.tf = tf_gpu;
         return new tfjsMnist(params);
     }
 }

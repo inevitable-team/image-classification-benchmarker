@@ -1,8 +1,7 @@
 {
   "name": "image-classification-benchmarker",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.9.0",
+  "description": "This is an open source benchmarking tool for Machine Learning practitioners, the purpose of which is to accurately compare multiple Machine Learning algorithms and techniques against one another, under a standardised condition.",
   "scripts": {
     "start": "node ./server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

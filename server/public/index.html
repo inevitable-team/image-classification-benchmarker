@@ -6,23 +6,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Image Classification Benchmarker</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="author" content="INEVITABLE"/>
+    <meta name="description" content="This is an open source benchmarking tool for Machine Learning practitioners, the purpose of which is to accurately compare multiple Machine Learning algorithms and techniques…">
+    <meta name="keywords" content="ML, Benchmarker, Open Source, Image Classification, Classification, MNIST"/>
 </head>
 <body>
     <header>
         <h1>Image Classification Benchmarker</h1>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam vel labore quos sit minus corrupti voluptatibus, sequi, quia repudiandae iste odio nemo iure. Officiis doloribus est ratione, maiores vitae illo!</p>
-        <h2>Image Datasets</h2>
+        <p>This is an open source benchmarking tool for Machine Learning practitioners, the purpose of which is to accurately compare multiple Machine Learning algorithms and techniques against one another, under a standardised condition.</p>
+        <label for="datasets"><h2>Image Datasets</h2></label>
         <select name="datasets" id="datasets">
             <option> --------------------- </option>
         </select>
         <p id="datasetText"></p>
-        <p id="imageCountText"></p>
+        <label for="imageCount"><p id="imageCountText"></p></label>
         <input type="range" name="imageCount" id="imageCount">
         <input type="button" value="Train All" class="train" id="trainAll">
     </header>
     <main>
         <div id="algorithms"></div>
         <div class="algorithm algorithmNew">
+            <label for="algorithmsList"><h3>Add New Algorithm</h3></label>
             <select name="algorithms" id="algorithmsList">
                 <option> --------------------- </option>
             </select>
@@ -32,5 +36,6 @@
     <script src="d3.js"></script>
     <script src="matrix.js"></script>
     <script src="script.js"></script>
+    <a href="https://github.com/inevitable-team/image-classification-benchmarker" style="position: absolute;right: 0;"><img width="160" height="160" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
 </body>
 </html>

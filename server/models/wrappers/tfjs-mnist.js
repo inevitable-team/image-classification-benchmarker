@@ -29,6 +29,16 @@ class tfjsMnist {
         };
     }
 
+    async predictOne(imageBuffer) {
+        if (this.trained) {
+            let imageTensorData = await this._generateTensorData(this.classes, [{ location: imageBuffer }]);
+            let results = this.model.predict(imageTensorData.xs);
+            let argMax = results.argMax(1);
+            let predictedIndex = argMax.dataSync()[0];
+            return this.classes[predictedIndex];
+        } else { throw new Error("Model needs to be trained before it can predict!"); }
+    }
+
     // MODIFY 
 
     constructor(config) {
@@ -181,7 +191,7 @@ class tfjsMnist {
         }
     }
 
-    async predictOne(imageUrl) {
+    async predictOneFromImageUrl(imageUrl) {
         if (this.trained) {
             if (fs.existsSync(imageUrl)) {
                 let imageTensorData = await this._generateTensorData(this.classes, [{ location: imageUrl }]);

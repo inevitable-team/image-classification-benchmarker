@@ -203,6 +203,10 @@ h4 {
     margin: 5px 10px;
 }
 
+.predictDiv {
+    height: 200px;
+}
+
 .predictDiv > * {
     display: inline-block;
 }
@@ -223,7 +227,7 @@ h4 {
     overflow-y: auto;
     overflow-x: hidden;
     white-space: nowrap;
-    transform: rotate(90deg) translateY(-141px) translateX(150px);
+    transform: rotate(90deg) translateY(-150px) translateX(150px);
     transform-origin: right top;
 }
 

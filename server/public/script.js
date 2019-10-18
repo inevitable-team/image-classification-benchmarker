@@ -14,7 +14,7 @@ window.addEventListener("load", () => {
 
 function addAlgorithmEventListener() {
     let selectedId = document.getElementById("algorithmsList").selectedIndex;
-    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, trained: false, training: false, split: 0.75, epochs: 5 });
+    modelsInUse.push({ id: idCount++, modelId: MODELS[selectedId].id, predictions: [], trained: false, training: false, split: 0.75, epochs: 5 });
     setModelsHTML();
 }
 
@@ -89,6 +89,7 @@ function initModels() {
         return {
             id: idCount++,
             modelId: m.id,
+            predictions: [],
             trained: false,
             training: false,
             split: 0.75,
@@ -178,7 +179,11 @@ function setupModelEventListeners(modelArr) {
                             console.log("Prediction: ", result);
                             let reader = new FileReader();
                             reader.readAsDataURL(file);
-                            reader.onload = (eOnLoad) => document.getElementById(`a${el.id}predictions`).innerHTML += predictionHTML(eOnLoad.target.result, result.prediction);                            
+                            reader.onload = (eOnLoad) => {
+                                let imgSrc = eOnLoad.target.result, prediction = result.prediction;
+                                modelsInUse[i].predictions.push({ imgSrc, prediction });
+                                document.getElementById(`a${el.id}predictions`).innerHTML = predictionHTML(imgSrc, prediction) + document.getElementById(`a${el.id}predictions`).innerHTML;
+                            };                            
                         });
                     }
                 })
@@ -225,7 +230,9 @@ function trainedModelHTML(userModelObj) {
                 <input type="button" value="D" class="train download" id="a${userModelObj.id}downloadBtn">
                 <div class="predictDiv">
                     <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload" multiple>
-                    <div id="a${userModelObj.id}predictions" class="predictionsContainer"></div>
+                    <div id="a${userModelObj.id}predictions" class="predictionsContainer">
+                        ${ userModelObj.predictions.reverse().map(p => predictionHTML(p.imgSrc, p.prediction)).join("") }
+                    </div>
                 </div>
                 <div class="eval" id="eval${userModelObj.id}">
                     <div class="time">

@@ -10,7 +10,7 @@ Text
 
 You will find the controller for loading the various algorithms in `~/server/models/index.js`, this will then load all of the JavaScript files in the `~/server/models/wrappers` directory.
 
-These wrappers are exported classes that require a name,description and a create function. The create function will be used to return a new instance of a model which will be ran per each API call, which will than be ran and return the results.
+These wrappers are exported classes that require a name, description and a create function. The create function will be used to return a new instance of a model which will be ran per each API call, which will than be ran and return the results.
 
 An example of which would be:
 
@@ -32,6 +32,10 @@ class exampleWrapper {
 class e {
     constructor(params) {
         this.params = params;
+    }
+
+    async predictOne(fileBuffer) {
+        return "N/A";
     }
 
     async run() {

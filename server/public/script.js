@@ -22,6 +22,7 @@ function addTrainAllEventListener() {
     modelsInUse.forEach((data, i) => {
         if (!modelsInUse[i].training) {
             modelsInUse[i].training = true;
+            modelsInUse[i].classes = IMAGES[datasetsElement.selectedIndex].classes;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
                 uid: rid,
@@ -34,7 +35,7 @@ function addTrainAllEventListener() {
                     epochs: data.epochs
                 }
             }, results => {
-                console.log("Trained Results: ", results);
+                modelsInUse[i].predictions = [];
                 modelsInUse[i].trained = true;
                 modelsInUse[i].training = false;
                 modelsInUse[i].results = results;
@@ -78,8 +79,10 @@ function imageCountScroll() {
     imagesToUse = rangeElement.value;
     document.getElementById("imageCountText").innerHTML = `Use ${rangeElement.value} images out of ${rangeElement.max}.`;
     modelsInUse.forEach(el => {
-        document.getElementById(`a${el.id}splitTraining`).innerHTML = Math.round(imagesToUse * el.split);
-        document.getElementById(`a${el.id}splitTesting`).innerHTML = Math.round(imagesToUse * (1 - el.split));
+        if (!el.trained) {
+            document.getElementById(`a${el.id}splitTraining`).innerHTML = Math.round(imagesToUse * el.split);
+            document.getElementById(`a${el.id}splitTesting`).innerHTML = Math.round(imagesToUse * (1 - el.split));
+        }
     }); setModelsHTML();
 }
 
@@ -107,7 +110,7 @@ function setModelsHTML() {
             Matrix({
                 container : `#cm${m.id}`,
                 data      : m.results.confusionMatrix,
-                labels    : IMAGES[datasetsElement.selectedIndex].classes
+                labels    : m.classes
             });
         }
     });
@@ -143,6 +146,7 @@ function setupModelEventListeners(modelArr) {
             document.getElementById(`a${el.id}trainBtn`).disabled = true;
             document.getElementById(`a${el.id}trainBtn`).value = "N/A";
             modelsInUse[i].training = true;
+            modelsInUse[i].classes = IMAGES[datasetsElement.selectedIndex].classes;
             // TRAIN FROM ELEMENT POST REQ
             postReq("/api/models/train", {
                 uid: rid,
@@ -155,6 +159,7 @@ function setupModelEventListeners(modelArr) {
                     epochs: el.epochs
                 }
             }, results => {
+                modelsInUse[i].predictions = [];
                 modelsInUse[i].trained = true;
                 modelsInUse[i].training = false;
                 modelsInUse[i].results = results;
@@ -231,7 +236,7 @@ function trainedModelHTML(userModelObj) {
                 <div class="predictDiv">
                     <p>Predict: </p><input type="file" name="" id="a${userModelObj.id}fileUpload" multiple>
                     <div id="a${userModelObj.id}predictions" class="predictionsContainer">
-                        ${ userModelObj.predictions.reverse().map(p => predictionHTML(p.imgSrc, p.prediction)).join("") }
+                        ${ userModelObj.predictions.map(p => predictionHTML(p.imgSrc, p.prediction)).reverse().join("") }
                     </div>
                 </div>
                 <div class="eval" id="eval${userModelObj.id}">

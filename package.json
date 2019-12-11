@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@inevitable/tfjs-mnist": "^1.0.0",
     "@inevitable/tfjs-transfer-learner": "^1.2.7",
     "@tensorflow/tfjs-node": "1.2.10",
     "body-parser": "^1.19.0",

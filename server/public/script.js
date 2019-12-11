@@ -47,6 +47,7 @@ function addTrainAllEventListener() {
 
 function getReq(url, okayHandler, errorHandler) {
     const xhr = new XMLHttpRequest();
+    xhr.timeout = 1000 * 60 * 60;
     xhr.open("GET", url);
     xhr.send();
     xhr.onload = () => xhr.status == 200 ? okayHandler(JSON.parse(xhr.response)) : errorHandler(xhr);
@@ -55,6 +56,7 @@ function getReq(url, okayHandler, errorHandler) {
 
 function postReq(url, json, callback) {
     let xhr = new XMLHttpRequest();
+    xhr.timeout = 1000 * 60 * 60;
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(json));

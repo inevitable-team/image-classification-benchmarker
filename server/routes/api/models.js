@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/train', async (req, res) => {
+  res.setTimeout(0);
   try {
     // If model has been previously trained, remove it
     let modelIndex = trainedModels.findIndex(m => m.uid == req.body.uid && m.mid == req.body.mid);

@@ -1,4 +1,4 @@
-let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0, rid = Math.random().toString(36).substr(2, 16);
+let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0, rid = Math.random().toString(36).substr(2, 16), historicalResults = [];
 
 window.addEventListener("load", () => {
     // getReq("https://jsonplaceholder.typicode.com/todos/1", console.log, (res) => console.log("Fu", res));
@@ -39,6 +39,14 @@ function addTrainAllEventListener() {
                 modelsInUse[i].trained = true;
                 modelsInUse[i].training = false;
                 modelsInUse[i].results = results;
+                historicalResults.push({
+                    model: modelsInUse[i],
+                    result: results,
+                    dataset: {
+                        id: datasetsElement.selectedIndex,
+                        count: parseInt(imagesToUse)
+                    }
+                });
                 setModelsHTML();
             });
         }

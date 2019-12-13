@@ -334,7 +334,7 @@ function resultsGraph() {
 
     var parcoords = d3.parcoords()("#results")
     .data(predictionData)
-        .color(d3.color(randomHex()))
+        .color(d3.rgb(r(255),r(255),r(255),1))
         // .alpha(0.25)
         .composite("darken")
         .margin({ top: 24, left: 150, bottom: 12, right: 0 })
@@ -359,6 +359,6 @@ function historicalResultTodataPoint(result) {
     }
 }
 
-function randomHex() {
-    return `#${(Math.random()*(1<<24)|0).toString(16)}`;
+function r(max) {
+    return Math.round(Math.random() * max);
 }

@@ -1,4 +1,4 @@
-let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0, rid = Math.random().toString(36).substr(2, 16);
+let IMAGES, MODELS, rangeElement, datasetsElement, modelsInUse = [], imagesToUse = 0, idCount = 0, rid = Math.random().toString(36).substr(2, 16), historicalResults = [], predictionData = [];
 
 window.addEventListener("load", () => {
     // getReq("https://jsonplaceholder.typicode.com/todos/1", console.log, (res) => console.log("Fu", res));
@@ -10,6 +10,7 @@ window.addEventListener("load", () => {
     datasetsElement.addEventListener("change", () => imageChange(datasetsElement.selectedIndex));
     document.getElementById("addAlgorithm").addEventListener("click", addAlgorithmEventListener);
     document.getElementById("trainAll").addEventListener("click", addTrainAllEventListener);
+    // resultsGraph();
 });
 
 function addAlgorithmEventListener() {
@@ -39,7 +40,20 @@ function addTrainAllEventListener() {
                 modelsInUse[i].trained = true;
                 modelsInUse[i].training = false;
                 modelsInUse[i].results = results;
+                // Data
+                let data = {
+                    model: modelsInUse[i],
+                    result: results,
+                    dataset: {
+                        id: datasetsElement.selectedIndex,
+                        count: parseInt(parseInt(imagesToUse) * parseFloat(modelsInUse[i].split))
+                    }
+                };
+                historicalResults.push(data);
+                predictionData.push(historicalResultTodataPoint(data));
+                // Update
                 setModelsHTML();
+                resultsGraph();
             });
         }
     }); setModelsHTML();
@@ -172,29 +186,32 @@ function setupModelEventListeners(modelArr) {
         if (document.getElementById(`a${el.id}downloadBtn`)) document.getElementById(`a${el.id}downloadBtn`).addEventListener("click", () => alert("The download feature is not available yet!"));
         // Predict
         if (el.trained) {
-            document.getElementById(`a${el.id}fileUpload`).addEventListener('change', () => {
-                [...document.getElementById(`a${el.id}fileUpload`).files].forEach(file => {
-                    let fr = new FileReader();
-                    fr.readAsArrayBuffer(file);
-                    fr.onload = (e) => {
-                        let imgBuffer = new Uint8Array(e.target.result);
-                        postReq("/api/models/predictOne", {
-                            uid: rid,
-                            mid: el.id,
-                            Uint8ArrayBuffer: imgBuffer
-                        }, result => {
-                            console.log("Prediction: ", result);
-                            let reader = new FileReader();
-                            reader.readAsDataURL(file);
-                            reader.onload = (eOnLoad) => {
-                                let imgSrc = eOnLoad.target.result, prediction = result.prediction;
-                                modelsInUse[i].predictions.push({ imgSrc, prediction });
-                                document.getElementById(`a${el.id}predictions`).innerHTML = predictionHTML(imgSrc, prediction) + document.getElementById(`a${el.id}predictions`).innerHTML;
-                            };                            
-                        });
-                    }
-                })
-            });
+            let fileUploader = document.getElementById(`a${el.id}fileUpload`);
+            if (fileUploader) {
+                fileUploader.addEventListener('change', () => {
+                    [...document.getElementById(`a${el.id}fileUpload`).files].forEach(file => {
+                        let fr = new FileReader();
+                        fr.readAsArrayBuffer(file);
+                        fr.onload = (e) => {
+                            let imgBuffer = new Uint8Array(e.target.result);
+                            postReq("/api/models/predictOne", {
+                                uid: rid,
+                                mid: el.id,
+                                Uint8ArrayBuffer: imgBuffer
+                            }, result => {
+                                console.log("Prediction: ", result);
+                                let reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = (eOnLoad) => {
+                                    let imgSrc = eOnLoad.target.result, prediction = result.prediction;
+                                    modelsInUse[i].predictions.push({ imgSrc, prediction });
+                                    document.getElementById(`a${el.id}predictions`).innerHTML = predictionHTML(imgSrc, prediction) + document.getElementById(`a${el.id}predictions`).innerHTML;
+                                };                            
+                            });
+                        }
+                    })
+                });
+            }
         }
     });
 }
@@ -309,4 +326,44 @@ function setModelsPlaceholder() {
         desc: "Example text two."
     }];
     initModels();
+}
+
+function resultsGraph() {
+    // Reset hack due to documented way to add new data or reset the chart, without it having artifacts
+    document.getElementById("results").innerHTML = "";
+
+    let colourRange = d3.scale.linear()
+    .interpolate(d3.interpolateHcl) 
+    .range(["#0019FF", "#AAFAFF"]);
+
+    var parcoords = d3.parcoords()("#results")
+    .data(predictionData)
+        .color((d,i) => colourRange((i+1)/predictionData.length))
+        .alpha(0.8)
+        .composite("darken")
+        .margin({ top: 24, left: 10, bottom: 12, right: 0 })
+        .mode("queue")
+        .render()
+        .brushMode("1D-axes");
+    
+    parcoords.svg.selectAll("text")
+        .style("font", "10px sans-serif");
+}
+
+function historicalResultTodataPoint(result) {
+    return {
+        id: predictionData.length,
+        modelName: MODELS[result.model.modelId].name,
+        datasetName: IMAGES[result.dataset.id].name,
+        datasetCount: result.dataset.count,
+        epochs: result.model.epochs,
+        setUpTime: result.result.setUpTime,
+        trainTime: result.result.trainTime,
+        evaluateTime: result.result.evaluateTime,
+        accuracy: result.result.accuracy
+    }
+}
+
+function r(max) {
+    return Math.round(Math.random() * max);
 }

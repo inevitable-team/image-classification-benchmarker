@@ -339,9 +339,9 @@ function resultsGraph() {
     var parcoords = d3.parcoords()("#results")
     .data(predictionData)
         .color((d,i) => colourRange((i+1)/predictionData.length))
-        .alpha(0.6)
+        .alpha(0.8)
         .composite("darken")
-        .margin({ top: 24, left: 150, bottom: 12, right: 0 })
+        .margin({ top: 24, left: 10, bottom: 12, right: 0 })
         .mode("queue")
         .render()
         .brushMode("1D-axes");
@@ -352,6 +352,7 @@ function resultsGraph() {
 
 function historicalResultTodataPoint(result) {
     return {
+        id: predictionData.length,
         modelName: MODELS[result.model.modelId].name,
         datasetName: IMAGES[result.dataset.id].name,
         datasetCount: result.dataset.count,

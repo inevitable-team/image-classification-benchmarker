@@ -329,8 +329,11 @@ function setModelsPlaceholder() {
 }
 
 function resultsGraph() {
+    // Reset hack due to documented way to add new data or reset the chart, without it having artifacts
+    document.getElementById("results").innerHTML = "";
+
     var parcoords = d3.parcoords()("#results")
-        .data(predictionData)
+    .data(predictionData)
         .color(d3.color(randomHex()))
         // .alpha(0.25)
         .composite("darken")

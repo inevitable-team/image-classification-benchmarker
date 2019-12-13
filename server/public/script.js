@@ -332,10 +332,14 @@ function resultsGraph() {
     // Reset hack due to documented way to add new data or reset the chart, without it having artifacts
     document.getElementById("results").innerHTML = "";
 
+    let colourRange = d3.scale.linear()
+    .interpolate(d3.interpolateHcl) 
+    .range(["#0019FF", "#AAFAFF"]);
+
     var parcoords = d3.parcoords()("#results")
     .data(predictionData)
-        .color(d3.rgb(r(255),r(255),r(255),1))
-        // .alpha(0.25)
+        .color((d,i) => colourRange((i+1)/predictionData.length))
+        .alpha(0.6)
         .composite("darken")
         .margin({ top: 24, left: 150, bottom: 12, right: 0 })
         .mode("queue")

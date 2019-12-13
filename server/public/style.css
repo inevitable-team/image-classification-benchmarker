@@ -291,6 +291,7 @@ h4 {
 #algorithmsContainer {
     white-space: nowrap;
     overflow: auto;
+    margin-right: 60px;
 }
 
 #algorithmsContainer > * {

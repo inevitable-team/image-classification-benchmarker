@@ -287,3 +287,12 @@ h4 {
         transform: rotate(360deg);
     }
 }
+
+#algorithmsContainer {
+    white-space: nowrap;
+    overflow: auto;
+}
+
+#algorithmsContainer > * {
+    white-space: normal;
+}
